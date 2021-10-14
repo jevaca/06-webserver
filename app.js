@@ -1,31 +1,39 @@
-//se utiliza express porque agiliza el proceso de levantar un webserver o una api, sobre todo cuando trabajamos con rutas.
+const express = require('express');
+const hbs = require('hbs');
+require('dotenv').config();
 
-const express = require('express')
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
-//para servir contenido estatico 
+//Handlebars
+app.set('view engine', 'hbs'); //especificamos que vamos a trabajar con handlebars, cuando trabajamos con handlebars las vistas deben ir en una carpeta llamada views
+hbs.registerPartials(__dirname + '/views/partials');
 
-app.use( express.static('public') ); //middlerware. Para que tome por defecto la página de inicio, esta se debe llamar index.html
+//Express
+app.use(express.static('public'));
 
-//a diferencia de http.createServer (el método propio de javascript), express por defecto no permite acceder a rutas que no están definidas y atrapa la excepcion colocando un mensaje diciendo que la ruta no se puede acceder a la ruta
-
-// app.get('/', (req, res) => { //podemos comentar esta linea debido a que estamos utilizando app.use para mostrar el index, por lo tanto este get nunca se va a ejecutar
-//   res.send('Home Page') //mostrar en la pantalla del navegaodr (no consola)
-// })
-
-app.get('/hola-mundo', (req, res) => {
-//   res.send('Hola Mundo en su respectiva ruta') //mostrar en la pantalla del navegaodr (no consola)
-    res.sendFile( __dirname + '/public/hola-mundo.html');
+app.get('/', (req, res) => {
+    res.render('home', {
+        nombre: 'Jonathan Vaca',
+        titulo: 'Software Engineer'
+    });
 })
 
-app.get('*', (req, res) => {  //con * podemos especificar cualquier otra ruta que no sea las especificadas anteriormente, incluyendo las sub-rutas
-  //res.send('404 | Page Not Found') //mostrar en la pantalla del navegaodr (no consola)
-  res.sendFile( __dirname + '/public/404.html');
+app.get('/generic', (req, res) => {
+    res.render('generic', {
+        nombre: 'Jonathan Vaca',
+        titulo: 'Software Engineer'
+    });
 })
- 
+
+  
+app.get('/elements', (req, res) => {
+    res.render('elements', {
+        nombre: 'Jonathan Vaca',
+        titulo: 'Software Engineer'
+    });
+})
+
 app.listen(port, () => {
-
-    console.log(`Example app listening at http://localhost:${port}`)
-
-});
+  console.log(`Example app listening at http://localhost:${port}`)
+})
